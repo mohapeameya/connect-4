@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import * as Haptics from 'expo-haptics';
+import { useAudioPlayer } from 'expo-audio';
+import audioClick from '../../assets/sounds/click.mp3';
+import audioWinner from '../../assets/sounds/winner.wav';
 
 const Board = ({
   players,
@@ -66,6 +69,8 @@ const Board = ({
 };
 
 export default function Index() {
+  const audioClickPlayer = useAudioPlayer(audioClick);
+  const audioWinPlayer = useAudioPlayer(audioWinner);
   const ROWS = 6,
     COLS = 5;
 
@@ -86,6 +91,8 @@ export default function Index() {
   const players = [player1, player2];
 
   const winnerFeedback = () => {
+    audioWinPlayer.seekTo(0)
+    audioWinPlayer.play();
     for(let i=0;i<25;i++) {
       setTimeout(()=> {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid) 
@@ -102,8 +109,12 @@ export default function Index() {
     if (checkWinner(rowIndex, colIndex)) {
       setWinner(player);
       winnerFeedback()
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+      audioClickPlayer.seekTo(0)
+      audioClickPlayer.play();
     }
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
+
     setState((prevState) => {
       // Create a deep copy of the current state
       const newState = prevState.map((row) => [...row]);
