@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     flexDirection: "row",
-    alignSelf: "center",
-    alignItems: "center", // Align items vertically
+    alignSelf: "center", // Center the button
+    alignItems: "center", // Center items vertically
     justifyContent: "center", // Center items horizontally
     gap: 10,
     marginBottom: 20,
