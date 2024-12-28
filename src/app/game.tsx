@@ -205,7 +205,7 @@ export default function Game() {
             restartGame();
           }}
         >
-          <Text style={styles.buttonText}>Restart Game</Text>
+          <Text style={styles.buttonText}>Restart</Text>
           <Ionicons name="refresh" size={24} color="red" />
         </TouchableOpacity>
       </View>

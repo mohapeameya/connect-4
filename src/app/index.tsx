@@ -24,7 +24,6 @@ export default function Index() {
             name="play"
             size={26}
             color="green"
-            style={styles.icon}
           />
         </TouchableOpacity>
       </Link>
@@ -35,7 +34,6 @@ export default function Index() {
             name="cog"
             size={26}
             color="yellow"
-            style={styles.icon}
           />
         </TouchableOpacity>
       </Link>
@@ -78,8 +76,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
     fontWeight: "600", // Corrected to a string
-  },
-  icon: {
-    marginTop: 3, // Optional, aligns the icon slightly better
-  },
+  }
 });
