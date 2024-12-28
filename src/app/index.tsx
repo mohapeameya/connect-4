@@ -12,6 +12,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
+      <Text style={styles.title}>CONNECT 4</Text>
       <Image
         source={require("@/assets/images/main.png")}
         style={[styles.logo, { width: logoWidth, height: logoHeight }]}
@@ -48,6 +49,14 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     // alignItems: "center",
     justifyContent: "center",
+  },
+  title: {
+    color: "white",
+    fontSize: 50,
+    marginBottom: 40,
+    fontWeight: "bold",
+    fontStyle: "italic",
+    alignSelf: "center",
   },
   logo: {
     alignSelf: "center",
