@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAudioPlayer } from "expo-audio";
 import audioClick from "@/assets/sounds/click.mp3";
 import audioWinner from "@/assets/sounds/winner.wav";
-import { Link } from "expo-router";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import Board from "@/components/board";
 import { playFeedback, winnerFeedback } from "@/utils/utilities";
 import Footer from "@/components/footer";
@@ -127,7 +125,6 @@ export default function Game() {
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
-      <View style={styles.board}>
         <Board
           rows={ROWS}
           cols={COLS}
@@ -136,7 +133,6 @@ export default function Game() {
           players={players}
           winner={winner}
         />
-      </View>
 
       <View
         style={{
@@ -187,10 +183,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     alignSelf: "center",
-  },
-  board: {
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 25,
   }
 });

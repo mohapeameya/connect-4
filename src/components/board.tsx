@@ -1,6 +1,11 @@
-import { TouchableOpacity, useWindowDimensions, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
-export default function Board ({
+export default function Board({
   players,
   winner,
   rows,
@@ -53,6 +58,17 @@ export default function Board ({
       </View>
     );
   }
-  return <View style={{ gap: gap }}>{board}</View>;
-};
+  return (
+    <View style={styles.board}>
+      <View style={{ gap: gap }}>{board}</View>
+    </View>
+  );
+}
 
+const styles = StyleSheet.create({
+  board: {
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 25,
+  },
+});
