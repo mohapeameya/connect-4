@@ -14,7 +14,7 @@ export default function Index() {
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
       <Image
-        source={require("@/assets/images/main.png")}
+        source={require("@/assets/images/logo.png")}
         style={[styles.logo, { width: logoWidth, height: logoHeight }]}
       />
       <Link href={"/game"} asChild>
