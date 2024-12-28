@@ -6,11 +6,11 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import { StatusBar } from 'expo-status-bar';
-import * as Haptics from 'expo-haptics';
-import { useAudioPlayer } from 'expo-audio';
-import audioClick from '../../assets/sounds/click.mp3';
-import audioWinner from '../../assets/sounds/winner.wav';
+import { StatusBar } from "expo-status-bar";
+import * as Haptics from "expo-haptics";
+import { useAudioPlayer } from "expo-audio";
+import audioClick from "@/assets/sounds/click.mp3";
+import audioWinner from "@/assets/sounds/winner.wav";
 
 const Board = ({
   players,
@@ -91,27 +91,23 @@ export default function Index() {
   const players = [player1, player2];
 
   const winnerFeedback = () => {
-    audioWinPlayer.seekTo(0)
+    audioWinPlayer.seekTo(0);
     audioWinPlayer.play();
-    for(let i=0;i<25;i++) {
-      setTimeout(()=> {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid) 
-      }, i * 10)
+    for (let i = 0; i < 25; i++) {
+      setTimeout(() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
+      }, i * 10);
     }
-  }
+  };
 
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
-    // Haptics.notificationAsync(
-    //   Haptics.NotificationFeedbackType.Success
-    // )
-    
     if (checkWinner(rowIndex, colIndex)) {
       setWinner(player);
-      winnerFeedback()
+      winnerFeedback();
     } else {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
-      audioClickPlayer.seekTo(0)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
+      audioClickPlayer.seekTo(0);
       audioClickPlayer.play();
     }
 
@@ -179,9 +175,8 @@ export default function Index() {
     );
     setPlayer(player1);
     setWinner("");
-  }
+  };
   return (
-
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
