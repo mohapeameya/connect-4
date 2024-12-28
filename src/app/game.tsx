@@ -8,6 +8,7 @@ import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Board from "@/components/board";
 import { playFeedback, winnerFeedback } from "@/utils/utilities";
+import Footer from "@/components/footer";
 
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
@@ -168,24 +169,7 @@ export default function Game() {
           </Text>
         )}
       </View>
-      <View style={styles.footer}>
-        <Link href={"/"} asChild>
-          <TouchableOpacity style={styles.button}>
-            <Ionicons name="caret-back" size={24} color="yellow" />
-            <Text style={styles.buttonText}>Back</Text>
-          </TouchableOpacity>
-        </Link>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            console.log("Restart Game");
-            restartGame();
-          }}
-        >
-          <Text style={styles.buttonText}>Restart</Text>
-          <Ionicons name="refresh" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
+      <Footer restartGame={restartGame} />
     </View>
   );
 }
@@ -208,27 +192,5 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 25,
-  },
-  footer: {
-    marginTop: 50,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  button: {
-    borderColor: "white",
-    borderWidth: 1,
-    borderRadius: 15,
-    paddingVertical: 7,
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
+  }
 });
