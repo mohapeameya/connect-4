@@ -12,6 +12,7 @@ import { useAudioPlayer } from "expo-audio";
 import audioClick from "@/assets/sounds/click.mp3";
 import audioWinner from "@/assets/sounds/winner.wav";
 import { Link } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Board = ({
   players,
@@ -226,6 +227,7 @@ export default function Game() {
       <View style={styles.footer}>
         <Link href={"/"} asChild>
           <TouchableOpacity style={styles.button}>
+            <Ionicons name="caret-back" size={24} color="yellow" />
             <Text style={styles.buttonText}>Back</Text>
           </TouchableOpacity>
         </Link>
@@ -237,6 +239,7 @@ export default function Game() {
           }}
         >
           <Text style={styles.buttonText}>Restart Game</Text>
+          <Ionicons name="refresh" size={24} color="red" />
         </TouchableOpacity>
       </View>
     </View>
@@ -273,9 +276,15 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 1,
     borderRadius: 15,
-    padding: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   buttonText: {
     color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
