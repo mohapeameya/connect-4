@@ -1,18 +1,13 @@
 import { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import * as Haptics from "expo-haptics";
 import { useAudioPlayer } from "expo-audio";
 import audioClick from "@/assets/sounds/click.mp3";
 import audioWinner from "@/assets/sounds/winner.wav";
 import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Board from "@/components/board";
+import { playFeedback, winnerFeedback } from "@/utils/utilities";
 
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
@@ -36,41 +31,24 @@ export default function Game() {
   const [winner, setWinner] = useState("");
   const players = [player1, player2];
 
-  const winnerFeedback = () => {
-    audioWinPlayer.seekTo(0);
-    audioWinPlayer.play();
-    for (let i = 0; i < 25; i++) {
-      setTimeout(() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
-      }, i * 10);
-    }
-  };
-
-  const playFeedback = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
-    audioClickPlayer.seekTo(0);
-    audioClickPlayer.play();
-  }
-
   const getEmptyRowIndex = (colIndex: number) => {
     for (let i = ROWS - 1; i >= 0; i--) {
       if (state[i][colIndex] === "") return i;
     }
     return -1;
-  }
+  };
 
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
     // If no cell is empty in the column, return
     const emptyRowIndex = getEmptyRowIndex(colIndex);
-    if(emptyRowIndex === -1) return;
-
+    if (emptyRowIndex === -1) return;
 
     if (checkWinner(emptyRowIndex, colIndex)) {
       setWinner(player);
-      winnerFeedback();
+      winnerFeedback(audioWinPlayer);
     } else {
-      playFeedback();
+      playFeedback(audioClickPlayer);
     }
 
     // update state
@@ -81,7 +59,6 @@ export default function Game() {
       // Update the specific cell
       // newState[rowIndex][colIndex] = player; // Update the specific cell
       newState[emptyRowIndex][colIndex] = player; // Update first empty cell in the column from the bottom
-
 
       return newState;
     });
