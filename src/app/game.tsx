@@ -102,24 +102,47 @@ export default function Game() {
     }
   };
 
+  const playFeedback = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
+    audioClickPlayer.seekTo(0);
+    audioClickPlayer.play();
+  }
+
+  const getEmptyRowIndex = (colIndex: number) => {
+    for (let i = ROWS - 1; i >= 0; i--) {
+      if (state[i][colIndex] === "") return i;
+    }
+    return -1;
+  }
+
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
-    if (checkWinner(rowIndex, colIndex)) {
+    // If no cell is empty in the column, return
+    const emptyRowIndex = getEmptyRowIndex(colIndex);
+    if(emptyRowIndex === -1) return;
+
+
+    if (checkWinner(emptyRowIndex, colIndex)) {
       setWinner(player);
       winnerFeedback();
     } else {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
-      audioClickPlayer.seekTo(0);
-      audioClickPlayer.play();
+      playFeedback();
     }
 
+    // update state
     setState((prevState) => {
       // Create a deep copy of the current state
       const newState = prevState.map((row) => [...row]);
+
       // Update the specific cell
-      newState[rowIndex][colIndex] = player;
+      // newState[rowIndex][colIndex] = player; // Update the specific cell
+      newState[emptyRowIndex][colIndex] = player; // Update first empty cell in the column from the bottom
+
+
       return newState;
     });
+
+    // update player turn
     setPlayer(player === player1 ? player2 : player1);
   };
 
