@@ -1,16 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Footer({ restartGame }: { restartGame: () => void }) {
   return (
     <View style={styles.footer}>
-      <Link href={"/"} asChild>
-        <TouchableOpacity style={styles.button}>
+      {/* <Link } asChild> */}
+        <TouchableOpacity onPress={() => router.back()} style={styles.button}>
           <Ionicons name="caret-back" size={24} color="yellow" />
           <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
-      </Link>
+      {/* </Link> */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -27,7 +27,7 @@ export default function Footer({ restartGame }: { restartGame: () => void }) {
 
 const styles = StyleSheet.create({
   footer: {
-    marginTop: 50,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
