@@ -1,8 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Footer({ restartGame }: { restartGame: () => void }) {
+    useEffect(() => {
+      console.log('Footer rendered');
+    },[]);
   return (
     <View style={styles.footer}>
       {/* <Link } asChild> */}

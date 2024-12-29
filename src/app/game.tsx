@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAudioPlayer } from "expo-audio";
 import audioClick from "@/assets/sounds/click.mp3";
 import audioWinner from "@/assets/sounds/winner.wav";
-import Board from "@/components/board";
+import Board from "@/components/game/board";
 import { playFeedback, winnerFeedback } from "@/utils/utilities";
-import Footer from "@/components/footer";
+import Footer from "@/components/game/footer";
+import React from "react";
 
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
   const audioWinPlayer = useAudioPlayer(audioWinner);
-  const ROWS = 6,
-    COLS = 5;
+  const ROWS = 4,
+    COLS = 4;
 
   const [state, setState] = useState(
     Array(ROWS) // Create an array with 6 rows
@@ -24,11 +25,14 @@ export default function Game() {
             .map((_, colIndex) => "") // Set each cell to "row,col"
       )
   );
-  const [player1, setPlayer1] = useState("Player 1");
-  const [player2, setPlayer2] = useState("Player 2");
+  const player1 = useRef("Player 1");
+  const player2 = useRef("Player 2");
   const [player, setPlayer] = useState("Player 1");
   const [winner, setWinner] = useState("");
+  const [draw, setDraw] = useState(false);
   const players = [player1, player2];
+  const moves = useRef<{ emptyRowIndex: number; colIndex: number }[]>([]);
+  const lastMove = useRef(-1);
 
   const getEmptyRowIndex = (colIndex: number) => {
     for (let i = ROWS - 1; i >= 0; i--) {
@@ -37,33 +41,63 @@ export default function Game() {
     return -1;
   };
 
+  const checkDraw = () => {
+    for (let i = 0; i < COLS; i++) {
+      if (state[0][i] === "") {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // check winner, draw, or update player turn
+  // on state change
+  useEffect(() => {
+    if (lastMove.current < 0) return; // no move yet
+    if (
+      checkWinner(
+        moves.current[lastMove.current].emptyRowIndex,
+        moves.current[lastMove.current].colIndex
+      )
+    ) {
+      setWinner(player);
+      winnerFeedback(audioWinPlayer);
+    } else if (checkDraw()) {
+      setDraw(true);
+    } else {
+      playFeedback(audioClickPlayer);
+
+      // update player turn
+      setPlayer(player === player1.current ? player2.current : player1.current);
+    }
+  }, [state]);
+
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
     // If no cell is empty in the column, return
     const emptyRowIndex = getEmptyRowIndex(colIndex);
     if (emptyRowIndex === -1) return;
 
-    if (checkWinner(emptyRowIndex, colIndex)) {
-      setWinner(player);
-      winnerFeedback(audioWinPlayer);
-    } else {
-      playFeedback(audioClickPlayer);
-    }
+    // Use ref is sync, therefore last move is updated
+    // before the state is updated
+    // Add the move to the moves array
+    moves.current.push({ emptyRowIndex: emptyRowIndex, colIndex: colIndex });
+    lastMove.current = moves.current.length - 1;
 
     // update state
     setState((prevState) => {
       // Create a deep copy of the current state
       const newState = prevState.map((row) => [...row]);
 
-      // Update the specific cell
-      // newState[rowIndex][colIndex] = player; // Update the specific cell
-      newState[emptyRowIndex][colIndex] = player; // Update first empty cell in the column from the bottom
+      // Update the specific cell (similar to X ans O game)
+      // newState[rowIndex][colIndex] = player;
+
+      // Update first empty cell in the column from the bottom
+      // As per the original game rules
+      newState[emptyRowIndex][colIndex] = player; 
 
       return newState;
     });
-
-    // update player turn
-    setPlayer(player === player1 ? player2 : player1);
   };
 
   // crux of the game
@@ -118,21 +152,22 @@ export default function Game() {
               .map((_, colIndex) => "") // Set each cell to "row,col"
         )
     );
-    setPlayer(player1);
+    setPlayer(player1.current);
     setWinner("");
+    setDraw(false);
   };
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
-        <Board
-          rows={ROWS}
-          cols={COLS}
-          state={state}
-          updateCell={updateCell}
-          players={players}
-          winner={winner}
-        />
+      <Board
+        rows={ROWS}
+        cols={COLS}
+        state={state}
+        updateCell={updateCell}
+        players={players}
+        winner={winner}
+      />
 
       <View
         style={{
@@ -143,26 +178,34 @@ export default function Game() {
           alignItems: "center",
         }}
       >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 50 / 2,
-            backgroundColor: winner
-              ? winner === player1
-                ? "yellow"
-                : "red"
-              : player === player1
-              ? "yellow"
-              : "red",
-          }}
-        ></View>
-        {winner ? (
-          <Text style={{ color: "white", fontSize: 30 }}>{winner} wins 🎉</Text>
+        {draw ? (
+          <Text style={styles.text}>It's a draw!</Text>
         ) : (
-          <Text style={{ color: "white", fontSize: 30 }}>
-            {player === player1 ? player1 : player2}'s turn
-          </Text>
+          <>
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 50 / 2,
+                backgroundColor: winner
+                  ? winner === player1.current
+                    ? "yellow"
+                    : "red"
+                  : player === player1.current
+                  ? "yellow"
+                  : "red",
+              }}
+            ></View>
+            <Text style={styles.text}>
+              {winner
+                ? `${winner} wins 🎉`
+                : `${
+                    player === player1.current
+                      ? player1.current
+                      : player2.current
+                  }'s turn`}
+            </Text>
+          </>
         )}
       </View>
       <Footer restartGame={restartGame} />
@@ -183,5 +226,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     alignSelf: "center",
-  }
+  },
+  text: {
+    color: "white",
+    fontSize: 30,
+  },
 });

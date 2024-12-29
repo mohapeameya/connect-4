@@ -1,3 +1,4 @@
+import { MutableRefObject, useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -13,7 +14,7 @@ export default function Board({
   state,
   updateCell,
 }: {
-  players: Array<string>;
+  players: Array<MutableRefObject<string>>;
   winner: string;
   rows: number;
   cols: number;
@@ -41,9 +42,9 @@ export default function Board({
             height: cellWidth,
             borderRadius: cellWidth / 2,
             backgroundColor:
-              state[i][j] === players[0]
+              state[i][j] === players[0].current
                 ? "yellow"
-                : state[i][j] === players[1]
+                : state[i][j] === players[1].current
                 ? "red"
                 : "black",
             justifyContent: "center",
@@ -58,6 +59,10 @@ export default function Board({
       </View>
     );
   }
+
+  useEffect(() => {
+    console.log('Board rendered');
+  },[]);
   return (
     <View style={styles.board}>
       <View style={{ gap: gap }}>{board}</View>
