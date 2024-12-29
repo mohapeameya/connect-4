@@ -1,10 +1,5 @@
 import { MutableRefObject, useEffect } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 
 export default function Board({
   players,
@@ -33,7 +28,7 @@ export default function Board({
     const row = [];
     for (let j = 0; j < cols; j++) {
       row.push(
-        <TouchableOpacity
+        <Pressable
           onPress={() => updateCell(i, j)}
           disabled={state[i][j] !== "" || winner !== ""}
           key={j}
@@ -50,7 +45,7 @@ export default function Board({
             justifyContent: "center",
             alignItems: "center",
           }}
-        ></TouchableOpacity>
+        ></Pressable>
       );
     }
     board.push(
@@ -61,8 +56,8 @@ export default function Board({
   }
 
   useEffect(() => {
-    console.log('Board rendered');
-  },[]);
+    console.log("Board rendered");
+  }, []);
   return (
     <View style={styles.board}>
       <View style={{ gap: gap }}>{board}</View>
