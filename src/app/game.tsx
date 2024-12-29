@@ -15,16 +15,15 @@ export default function Game() {
   const ROWS = 4,
     COLS = 4;
 
-  const [state, setState] = useState(
-    Array(ROWS) // Create an array with 6 rows
-      .fill(null)
-      .map(
-        (_, rowIndex) =>
-          Array(COLS) // Create an array with 7 columns
-            .fill(null)
-            .map((_, colIndex) => "") // Set each cell to "row,col"
-      )
-  );
+  const initialBoard = Array(ROWS) // Create an array with 6 rows
+    .fill(null)
+    .map(
+      (_, rowIndex) =>
+        Array(COLS) // Create an array with 7 columns
+          .fill(null)
+          .map((_, colIndex) => "") // Set each cell to "row,col"
+    );
+  const [state, setState] = useState(initialBoard);
   const player1 = useRef("Player 1");
   const player2 = useRef("Player 2");
   const [player, setPlayer] = useState("Player 1");
@@ -53,7 +52,13 @@ export default function Game() {
   // check winner, draw, or update player turn
   // on state change
   useEffect(() => {
-    if (lastMove.current < 0) return; // no move yet
+    // need to set player turn if no move has
+    // been made in case of undo till the start
+    if (lastMove.current < 0) {
+      setPlayer(player1.current);
+      return; // no move yet
+    }
+
     if (
       checkWinner(
         moves.current[lastMove.current].emptyRowIndex,
@@ -66,10 +71,8 @@ export default function Game() {
       setDraw(true);
     } else {
       playFeedback(audioClickPlayer);
-
-      // update player turn
-      setPlayer(player === player1.current ? player2.current : player1.current);
     }
+    setPlayer(player === player1.current ? player2.current : player1.current);
   }, [state]);
 
   // Function to update a specific cell
@@ -83,6 +86,7 @@ export default function Game() {
     // Add the move to the moves array
     moves.current.push({ emptyRowIndex: emptyRowIndex, colIndex: colIndex });
     lastMove.current = moves.current.length - 1;
+    // console.log(moves.current);
 
     // update state
     setState((prevState) => {
@@ -94,7 +98,7 @@ export default function Game() {
 
       // Update first empty cell in the column from the bottom
       // As per the original game rules
-      newState[emptyRowIndex][colIndex] = player; 
+      newState[emptyRowIndex][colIndex] = player;
 
       return newState;
     });
@@ -141,21 +145,43 @@ export default function Game() {
     return false;
   };
 
-  const restartGame = () => {
-    setState(
-      Array(ROWS) // Create an array with 6 rows
-        .fill(null)
-        .map(
-          (_, rowIndex) =>
-            Array(COLS) // Create an array with 7 columns
-              .fill(null)
-              .map((_, colIndex) => "") // Set each cell to "row,col"
-        )
-    );
+  const restart = () => {
+    // clear moves
+    lastMove.current = -1;
+    moves.current = [];
+
+    // reset states
+    setState(initialBoard);
     setPlayer(player1.current);
     setWinner("");
     setDraw(false);
   };
+
+  const undo = () => {
+    if (lastMove.current < 0) return;
+    const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
+    const newState = state.map((row) => [...row]);
+    newState[emptyRowIndex][colIndex] = "";
+    setState(newState);
+    moves.current.pop();
+    lastMove.current = lastMove.current - 1;
+    setWinner("");
+    setDraw(false);
+  };
+
+  // not tested
+  // const redo = () => {
+  //   if (lastMove.current >= moves.current.length - 1) return;
+  //   lastMove.current = lastMove.current + 1;
+  //   const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
+  //   const newState = state.map((row) => [...row]);
+  //   newState[emptyRowIndex][colIndex] = player;
+  //   setState(newState);
+  //   // setPlayer(player === player1.current ? player2.current : player1.current);
+  //   // setWinner("");
+  //   // setDraw(false);
+  // }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -208,7 +234,11 @@ export default function Game() {
           </>
         )}
       </View>
-      <Footer restartGame={restartGame} />
+      <Footer
+        restart={restart}
+        undo={undo}
+        // redo={redo}
+      />
     </View>
   );
 }

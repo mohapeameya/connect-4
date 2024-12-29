@@ -1,9 +1,21 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import {
+  EvilIcons,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function Footer({ restartGame }: { restartGame: () => void }) {
+export default function Footer({
+  restart,
+  undo,
+  // redo,
+}: {
+  restart: () => void;
+  undo: () => void;
+  // redo: () => void;
+}) {
   useEffect(() => {
     console.log("Footer rendered");
   }, []);
@@ -13,15 +25,34 @@ export default function Footer({ restartGame }: { restartGame: () => void }) {
         <Ionicons name="caret-back" size={24} color="yellow" />
         <Text style={styles.buttonText}>Back</Text>
       </TouchableOpacity>
+      {/* <View style={[styles.button, { flexDirection: "row", gap: 10 }]}> */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            undo();
+          }}
+        >
+          <Text style={styles.buttonText}>Undo</Text>
+          <EvilIcons name="undo" size={30} color="white" />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          // style={styles.button}
+          onPress={() => {
+            redo();
+          }}
+        >
+          <EvilIcons name="redo" size={30} color="white" />
+        </TouchableOpacity> */}
+      {/* </View> */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
           console.log("Restart Game");
-          restartGame();
+          restart();
         }}
       >
         <Text style={styles.buttonText}>Reset</Text>
-        <Ionicons name="refresh" size={24} color="red" />
+        <MaterialIcons name="delete-outline" size={24} color="red" />
       </TouchableOpacity>
     </View>
   );
@@ -40,7 +71,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
     paddingVertical: 7,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
