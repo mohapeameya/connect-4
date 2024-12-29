@@ -12,8 +12,8 @@ import React from "react";
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
   const audioWinPlayer = useAudioPlayer(audioWinner);
-  const ROWS = 4,
-    COLS = 4;
+  const ROWS = 6,
+    COLS = 5;
 
   const initialBoard = Array(ROWS) // Create an array with 6 rows
     .fill(null)
