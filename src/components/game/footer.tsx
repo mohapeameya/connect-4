@@ -4,17 +4,15 @@ import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Footer({ restartGame }: { restartGame: () => void }) {
-    useEffect(() => {
-      console.log('Footer rendered');
-    },[]);
+  useEffect(() => {
+    console.log("Footer rendered");
+  }, []);
   return (
     <View style={styles.footer}>
-      {/* <Link } asChild> */}
-        <TouchableOpacity onPress={() => router.back()} style={styles.button}>
-          <Ionicons name="caret-back" size={24} color="yellow" />
-          <Text style={styles.buttonText}>Back</Text>
-        </TouchableOpacity>
-      {/* </Link> */}
+      <TouchableOpacity onPress={() => router.back()} style={styles.button}>
+        <Ionicons name="caret-back" size={24} color="yellow" />
+        <Text style={styles.buttonText}>Back</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -22,7 +20,7 @@ export default function Footer({ restartGame }: { restartGame: () => void }) {
           restartGame();
         }}
       >
-        <Text style={styles.buttonText}>Restart</Text>
+        <Text style={styles.buttonText}>Reset</Text>
         <Ionicons name="refresh" size={24} color="red" />
       </TouchableOpacity>
     </View>
