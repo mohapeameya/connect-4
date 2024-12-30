@@ -59,6 +59,8 @@ export default function Game() {
       return; // no move yet
     }
 
+    if(winner) return; // game already won
+
     if (
       checkWinner(
         moves.current[lastMove.current].emptyRowIndex,
@@ -83,6 +85,7 @@ export default function Game() {
 
     // Use ref is sync, therefore last move is updated
     // before the state is updated
+
     // Add the move to the moves array
     moves.current.push({ emptyRowIndex: emptyRowIndex, colIndex: colIndex });
     lastMove.current = moves.current.length - 1;
@@ -93,7 +96,7 @@ export default function Game() {
       // Create a deep copy of the current state
       const newState = prevState.map((row) => [...row]);
 
-      // Update the specific cell (similar to X ans O game)
+      // Update the specific cell (similar to X and O game)
       // newState[rowIndex][colIndex] = player;
 
       // Update first empty cell in the column from the bottom
@@ -102,6 +105,15 @@ export default function Game() {
 
       return newState;
     });
+  };
+
+  // paint the winner cells
+  const paintWinner = (connect4: { row: number; col: number }[]) => {
+    const newState = state.map((row) => [...row]);
+    connect4.forEach((cell) => {
+      newState[cell.row][cell.col] = player + "W";
+    });
+    setState(newState);
   };
 
   // crux of the game
@@ -113,6 +125,7 @@ export default function Game() {
       [1, -1],
     ];
     for (const [dx, dy] of directions) {
+      let connect4 = [{ row: rowIndex, col: colIndex }];
       let count = 1;
       for (let i = 1; i < 4; i++) {
         const newRow = rowIndex + i * dx;
@@ -125,6 +138,7 @@ export default function Game() {
           state[newRow][newCol] !== player
         )
           break;
+        connect4.push({ row: newRow, col: newCol });
         count++;
       }
       for (let i = 1; i < 4; i++) {
@@ -138,9 +152,14 @@ export default function Game() {
           state[newRow][newCol] !== player
         )
           break;
+        connect4.push({ row: newRow, col: newCol });
         count++;
       }
-      if (count >= 4) return true;
+      // winner
+      if (count >= 4) {
+        paintWinner(connect4.slice(0, 4));
+        return true;
+      }
     }
     return false;
   };
@@ -159,17 +178,34 @@ export default function Game() {
 
   const undo = () => {
     if (lastMove.current < 0) return;
+
+    // move state one move back
     const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
     const newState = state.map((row) => [...row]);
+
+    // unpaint winner if present
+    for(let i=0;i<ROWS;i++) {
+      for(let j=0;j<COLS;j++) {
+        if(newState[i][j] === player1.current + 'W') {
+          newState[i][j] = player1.current;
+        } else if(newState[i][j] === player2.current + 'W') {
+          newState[i][j] = player2.current;
+        }
+      }
+    }
     newState[emptyRowIndex][colIndex] = "";
     setState(newState);
-    moves.current.pop();
-    lastMove.current = lastMove.current - 1;
+
+    // clear winner/draw
     setWinner("");
     setDraw(false);
+
+    // forget last move
+    moves.current.pop();
+    lastMove.current = lastMove.current - 1;
   };
 
-  // not tested
+  //  untested
   // const redo = () => {
   //   if (lastMove.current >= moves.current.length - 1) return;
   //   lastMove.current = lastMove.current + 1;

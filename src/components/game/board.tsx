@@ -36,10 +36,19 @@ export default function Board({
             width: cellWidth,
             height: cellWidth,
             borderRadius: cellWidth / 2,
+            borderColor:
+              winner &&
+              (state[i][j] === players[0].current + "W" ||
+                state[i][j] === players[1].current + "W")
+                ? "black"
+                : "transparent",
+            borderWidth:5,
             backgroundColor:
-              state[i][j] === players[0].current
+              state[i][j] === players[0].current ||
+              state[i][j] === players[0].current + "W"
                 ? "yellow"
-                : state[i][j] === players[1].current
+                : state[i][j] === players[1].current ||
+                  state[i][j] === players[1].current + "W"
                 ? "red"
                 : "black",
             justifyContent: "center",
