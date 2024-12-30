@@ -30,7 +30,7 @@ export default function Board({
       row.push(
         <Pressable
           onPress={() => updateCell(i, j)}
-          disabled={state[i][j] !== "" || winner !== ""}
+          disabled={winner !== ""}
           key={j}
           style={{
             width: cellWidth,
