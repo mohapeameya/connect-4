@@ -20,21 +20,13 @@ export default function Index() {
       <Link href={"/game"} asChild>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Start Game</Text>
-          <FontAwesome5
-            name="play"
-            size={26}
-            color="green"
-          />
+          <FontAwesome5 name="play" size={26} color="green" />
         </TouchableOpacity>
       </Link>
       <Link href={"/settings"} asChild>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Settings</Text>
-          <FontAwesome5
-            name="cog"
-            size={26}
-            color="yellow"
-          />
+          <FontAwesome5 name="cog" size={26} color="yellow" />
         </TouchableOpacity>
       </Link>
     </View>
@@ -76,5 +68,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
     fontWeight: "600", // Corrected to a string
-  }
+  },
 });

@@ -1,8 +1,4 @@
-import {
-  EvilIcons,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { EvilIcons, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -10,8 +6,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function Footer({
   restart,
   undo,
-  // redo,
-}: {
+}: // redo,
+{
   restart: () => void;
   undo: () => void;
   // redo: () => void;
@@ -26,16 +22,16 @@ export default function Footer({
         <Text style={styles.buttonText}>Back</Text>
       </TouchableOpacity>
       {/* <View style={[styles.button, { flexDirection: "row", gap: 10 }]}> */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            undo();
-          }}
-        >
-          <Text style={styles.buttonText}>Undo</Text>
-          <EvilIcons name="undo" size={30} color="white" />
-        </TouchableOpacity>
-        {/* <TouchableOpacity
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          undo();
+        }}
+      >
+        <Text style={styles.buttonText}>Undo</Text>
+        <EvilIcons name="undo" size={30} color="white" />
+      </TouchableOpacity>
+      {/* <TouchableOpacity
           // style={styles.button}
           onPress={() => {
             redo();
