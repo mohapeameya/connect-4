@@ -77,10 +77,13 @@ export default function Game() {
 
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
-    playFeedback(audioClickPlayer);
+    
     // If no cell is empty in the column, return
     const emptyRowIndex = getEmptyRowIndex(colIndex);
     if (emptyRowIndex === -1) return;
+
+    // sound
+    playFeedback(audioClickPlayer);
 
     // Use ref is sync, therefore last move is updated
     // before the state is updated
