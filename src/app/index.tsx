@@ -4,8 +4,8 @@ import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function Index() {
-  const logoActualWidth = 398,
-    logoActualHeight = 473;
+  const logoActualWidth = 402,
+    logoActualHeight = 479;
   const logoWidth = 200;
   const logoHeight = (logoWidth * logoActualHeight) / logoActualWidth;
 
