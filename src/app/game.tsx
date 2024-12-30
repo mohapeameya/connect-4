@@ -71,14 +71,13 @@ export default function Game() {
       winnerFeedback(audioWinPlayer);
     } else if (checkDraw()) {
       setDraw(true);
-    } else {
-      playFeedback(audioClickPlayer);
     }
     setPlayer(player === player1.current ? player2.current : player1.current);
   }, [state]);
 
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
+    playFeedback(audioClickPlayer);
     // If no cell is empty in the column, return
     const emptyRowIndex = getEmptyRowIndex(colIndex);
     if (emptyRowIndex === -1) return;
@@ -179,6 +178,7 @@ export default function Game() {
   const undo = () => {
     if (lastMove.current < 0) return;
 
+    playFeedback(audioClickPlayer);
     // move state one move back
     const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
     const newState = state.map((row) => [...row]);
