@@ -8,6 +8,7 @@ import Board from "@/components/game/board";
 import { CELL_STATES, playFeedback, winnerFeedback } from "@/utils/utilities";
 import Footer from "@/components/game/footer";
 import React from "react";
+import Status from "@/components/game/status";
 
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
@@ -246,73 +247,14 @@ export default function Game() {
     lastMove.current = lastMove.current - 1;
   };
 
-  //  untested
-  // const redo = () => {
-  //   if (lastMove.current >= moves.current.length - 1) return;
-  //   lastMove.current = lastMove.current + 1;
-  //   const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
-  //   const newState = state.map((row) => [...row]);
-  //   newState[emptyRowIndex][colIndex] = player;
-  //   setState(newState);
-  //   // setPlayer(player === player1.current ? player2.current : player1.current);
-  //   // setWinner("");
-  //   // setDraw(false);
-  // }
-
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
       <Board shape={shape} state={state} updateCell={updateCell} />
 
-      <View
-        style={{
-          marginTop: 20,
-          flexDirection: "row",
-          gap: 20,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {state.draw ? (
-          <Text style={styles.text}>It's a draw!</Text>
-        ) : (
-          <>
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: state.win
-                  ? state.winner === CELL_STATES.P1
-                    ? "yellow"
-                    : "red"
-                  : state.turn === CELL_STATES.P1
-                  ? "yellow"
-                  : "red",
-              }}
-            ></View>
-            <Text style={styles.text}>
-              {state.win
-                ? `${
-                    state.winner === CELL_STATES.P1
-                      ? player1.current
-                      : player2.current
-                  } wins 🎉`
-                : `${
-                    state.turn === CELL_STATES.P1
-                      ? player1.current
-                      : player2.current
-                  }'s turn`}
-            </Text>
-          </>
-        )}
-      </View>
-      <Footer
-        restart={restart}
-        undo={undo}
-        // redo={redo}
-      />
+      <Status state={state} />
+      <Footer restart={restart} undo={undo} />
     </View>
   );
 }
@@ -330,9 +272,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     alignSelf: "center",
-  },
-  text: {
-    color: "white",
-    fontSize: 30,
   },
 });

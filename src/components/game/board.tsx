@@ -1,21 +1,6 @@
-import { MutableRefObject, useEffect } from "react";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
-import Entypo from '@expo/vector-icons/Entypo';
-import { CELL_STATES } from "@/utils/utilities";
-
-interface GameState {
-  board: number[][];
-  turn: number;
-  players: MutableRefObject<string>[];
-  win: boolean;
-  draw: boolean;
-  winner: number;
-}
-
-interface Shape {
-  rows: number;
-  cols: number;
-}
+import { CELL_STATES, GameState, Shape } from "@/utils/utilities";
 
 export default function Board({
   shape,

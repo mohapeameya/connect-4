@@ -1,5 +1,6 @@
 import { AudioPlayer } from "expo-audio";
 import * as Haptics from "expo-haptics";
+import { MutableRefObject } from "react";
 
 export const winnerFeedback = (audioWinPlayer: AudioPlayer) => {
   audioWinPlayer.seekTo(0);
@@ -24,3 +25,17 @@ export const CELL_STATES = {
   W1: 3,
   W2: 4,
 };
+
+export interface GameState {
+  board: number[][];
+  turn: number;
+  players: MutableRefObject<string>[];
+  win: boolean;
+  draw: boolean;
+  winner: number;
+}
+
+export interface Shape {
+  rows: number;
+  cols: number;
+}
