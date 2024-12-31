@@ -23,12 +23,12 @@ export default function Index() {
           <FontAwesome5 name="play" size={26} color="green" />
         </TouchableOpacity>
       </Link>
-      <Link href={"/settings"} asChild>
+      {/* <Link href={"/settings"} asChild>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Settings</Text>
           <FontAwesome5 name="cog" size={26} color="yellow" />
         </TouchableOpacity>
-      </Link>
+      </Link> */}
     </View>
   );
 }
