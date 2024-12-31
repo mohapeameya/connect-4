@@ -1,21 +1,31 @@
 import { MutableRefObject, useEffect } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 
+interface GameState {
+  board: string[][];
+  turn: string;
+  players: MutableRefObject<string>[];
+  win: boolean;
+  draw: boolean;
+  winner: string;
+}
+
+interface Shape {
+  rows: number;
+  cols: number;
+}
+
 export default function Board({
-  players,
-  winner,
-  rows,
-  cols,
+  shape,
   state,
   updateCell,
 }: {
-  players: Array<MutableRefObject<string>>;
-  winner: string;
-  rows: number;
-  cols: number;
-  state: Array<Array<string>>;
+  shape: Shape;
+  state: GameState;
   updateCell: (rowIndex: number, colIndex: number) => void;
 }) {
+  const rows = shape.rows,
+    cols = shape.cols;
   const { width, height } = useWindowDimensions();
   const gap = 10;
   const boardWidth = width - gap * 2;
@@ -30,25 +40,25 @@ export default function Board({
       row.push(
         <Pressable
           onPress={() => updateCell(i, j)}
-          disabled={winner !== ""}
+          disabled={state.win}
           key={j}
           style={{
             width: cellWidth,
             height: cellWidth,
             borderRadius: cellWidth / 2,
             borderColor:
-              winner &&
-              (state[i][j] === players[0].current + "W" ||
-                state[i][j] === players[1].current + "W")
+              state.win &&
+              (state.board[i][j] === state.players[0].current + "W" ||
+                state.board[i][j] === state.players[1].current + "W")
                 ? "black"
                 : "transparent",
-            borderWidth:5,
+            borderWidth: 5,
             backgroundColor:
-              state[i][j] === players[0].current ||
-              state[i][j] === players[0].current + "W"
+              state.board[i][j] === state.players[0].current ||
+              state.board[i][j] === state.players[0].current + "W"
                 ? "yellow"
-                : state[i][j] === players[1].current ||
-                  state[i][j] === players[1].current + "W"
+                : state.board[i][j] === state.players[1].current ||
+                  state.board[i][j] === state.players[1].current + "W"
                 ? "red"
                 : "black",
             justifyContent: "center",

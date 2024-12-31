@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAudioPlayer } from "expo-audio";
@@ -12,72 +12,53 @@ import React from "react";
 export default function Game() {
   const audioClickPlayer = useAudioPlayer(audioClick);
   const audioWinPlayer = useAudioPlayer(audioWinner);
-  const ROWS = 6,
-    COLS = 5;
+  const shape = { rows: 6, cols: 5 };
 
-  const initialBoard = Array(ROWS) // Create an array with 6 rows
+  const player1 = useRef("Player 1");
+  const player2 = useRef("Player 2");
+
+  const initialBoard = Array(shape.rows) // Create an array with 6 rows
     .fill(null)
     .map(
       (_, rowIndex) =>
-        Array(COLS) // Create an array with 7 columns
+        Array(shape.cols) // Create an array with 7 columns
           .fill(null)
           .map((_, colIndex) => "") // Set each cell to "row,col"
     );
-  const [state, setState] = useState(initialBoard);
-  const player1 = useRef("Player 1");
-  const player2 = useRef("Player 2");
-  const [player, setPlayer] = useState("Player 1");
-  const [winner, setWinner] = useState("");
-  const [draw, setDraw] = useState(false);
-  const players = [player1, player2];
+
+  const initialState = {
+    board: initialBoard,
+    players: [player1, player2],
+    turn: player1.current,
+    win: false,
+    draw: false,
+    winner: "",
+  };
+
+  const [state, setState] = useState(initialState);
+
   const moves = useRef<{ emptyRowIndex: number; colIndex: number }[]>([]);
   const lastMove = useRef(-1);
 
   const getEmptyRowIndex = (colIndex: number) => {
-    for (let i = ROWS - 1; i >= 0; i--) {
-      if (state[i][colIndex] === "") return i;
+    for (let i = shape.rows - 1; i >= 0; i--) {
+      if (state.board[i][colIndex] === "") return i;
     }
     return -1;
   };
 
-  const checkDraw = () => {
-    for (let i = 0; i < COLS; i++) {
-      if (state[0][i] === "") {
+  const checkDraw = (board: string[][]) => {
+    for (let i = 0; i < shape.cols; i++) {
+      if (board[0][i] === "") {
+        console.log(state.board[0][i]);
         return false;
       }
     }
     return true;
   };
 
-  // check winner, draw, or update player turn
-  // on state change
-  useEffect(() => {
-    // need to set player turn if no move has
-    // been made in case of undo till the start
-    if (lastMove.current < 0) {
-      setPlayer(player1.current);
-      return; // no move yet
-    }
-
-    if(winner) return; // game already won
-
-    if (
-      checkWinner(
-        moves.current[lastMove.current].emptyRowIndex,
-        moves.current[lastMove.current].colIndex
-      )
-    ) {
-      setWinner(player);
-      winnerFeedback(audioWinPlayer);
-    } else if (checkDraw()) {
-      setDraw(true);
-    }
-    setPlayer(player === player1.current ? player2.current : player1.current);
-  }, [state]);
-
   // Function to update a specific cell
   const updateCell = (rowIndex: number, colIndex: number) => {
-    
     // If no cell is empty in the column, return
     const emptyRowIndex = getEmptyRowIndex(colIndex);
     if (emptyRowIndex === -1) return;
@@ -85,41 +66,72 @@ export default function Game() {
     // sound
     playFeedback(audioClickPlayer);
 
-    // Use ref is sync, therefore last move is updated
-    // before the state is updated
-
     // Add the move to the moves array
     moves.current.push({ emptyRowIndex: emptyRowIndex, colIndex: colIndex });
     lastMove.current = moves.current.length - 1;
-    // console.log(moves.current);
 
-    // update state
-    setState((prevState) => {
-      // Create a deep copy of the current state
-      const newState = prevState.map((row) => [...row]);
+    const status = checkWinner(
+      state.board,
+      emptyRowIndex,
+      colIndex,
+      state.turn
+    );
 
-      // Update the specific cell (similar to X and O game)
-      // newState[rowIndex][colIndex] = player;
+    if (status.winner) {
+      winnerFeedback(audioWinPlayer);
+      setState((prevState) => {
+        // Create a deep copy of the current board
+        const newBoard = prevState.board.map((row) => [...row]);
 
-      // Update first empty cell in the column from the bottom
-      // As per the original game rules
-      newState[emptyRowIndex][colIndex] = player;
+        // paint the winner cells
+        status.cells.forEach((cell) => {
+          newBoard[cell.row][cell.col] = prevState.turn + "W";
+        });
 
-      return newState;
-    });
-  };
+        const newState = {
+          ...prevState,
+          win: true,
+          board: newBoard,
+          winner: prevState.turn,
+          turn:
+            prevState.turn === player1.current
+              ? player2.current
+              : player1.current,
+        };
+        return newState;
+      });
+    } else {
+      setState((prevState) => {
+        // Create a deep copy of the current board
+        const newBoard = prevState.board.map((row) => [...row]);
 
-  // paint the winner cells
-  const paintWinner = (connect4: { row: number; col: number }[]) => {
-    const newState = state.map((row) => [...row]);
-    connect4.forEach((cell) => {
-      newState[cell.row][cell.col] = player + "W";
-    });
-    setState(newState);
+        // Update first empty cell in the column from the bottom
+        // As per the original game rules
+        newBoard[emptyRowIndex][colIndex] = prevState.turn;
+
+        let newState = {
+          ...prevState,
+          board: newBoard,
+          turn:
+            prevState.turn === player1.current
+              ? player2.current
+              : player1.current,
+        };
+        if (checkDraw(newBoard)) {
+          newState = { ...newState, draw: true };
+        }
+        return newState;
+      });
+    }
   };
 
   // crux of the game
-  const checkWinner = (rowIndex: number, colIndex: number) => {
+  const checkWinner = (
+    board: string[][],
+    rowIndex: number,
+    colIndex: number,
+    turn: string
+  ) => {
     const directions = [
       [0, 1],
       [1, 0],
@@ -127,20 +139,20 @@ export default function Game() {
       [1, -1],
     ];
     for (const [dx, dy] of directions) {
-      let connect4 = [{ row: rowIndex, col: colIndex }];
+      let cells = [{ row: rowIndex, col: colIndex }];
       let count = 1;
       for (let i = 1; i < 4; i++) {
         const newRow = rowIndex + i * dx;
         const newCol = colIndex + i * dy;
         if (
           newRow < 0 ||
-          newRow >= ROWS ||
+          newRow >= shape.rows ||
           newCol < 0 ||
-          newCol >= COLS ||
-          state[newRow][newCol] !== player
+          newCol >= shape.cols ||
+          board[newRow][newCol] !== turn
         )
           break;
-        connect4.push({ row: newRow, col: newCol });
+        cells.push({ row: newRow, col: newCol });
         count++;
       }
       for (let i = 1; i < 4; i++) {
@@ -148,22 +160,21 @@ export default function Game() {
         const newCol = colIndex - i * dy;
         if (
           newRow < 0 ||
-          newRow >= ROWS ||
+          newRow >= shape.rows ||
           newCol < 0 ||
-          newCol >= COLS ||
-          state[newRow][newCol] !== player
+          newCol >= shape.cols ||
+          board[newRow][newCol] !== turn
         )
           break;
-        connect4.push({ row: newRow, col: newCol });
+        cells.push({ row: newRow, col: newCol });
         count++;
       }
       // winner
       if (count >= 4) {
-        paintWinner(connect4.slice(0, 4));
-        return true;
+        return { winner: true, cells: cells };
       }
     }
-    return false;
+    return { winner: false, cells: [] };
   };
 
   const restart = () => {
@@ -172,10 +183,7 @@ export default function Game() {
     moves.current = [];
 
     // reset states
-    setState(initialBoard);
-    setPlayer(player1.current);
-    setWinner("");
-    setDraw(false);
+    setState(initialState);
   };
 
   const undo = () => {
@@ -184,24 +192,60 @@ export default function Game() {
     playFeedback(audioClickPlayer);
     // move state one move back
     const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
-    const newState = state.map((row) => [...row]);
+    const lastTurn =
+      state.turn === player1.current ? player2.current : player1.current;
 
-    // unpaint winner if present
-    for(let i=0;i<ROWS;i++) {
-      for(let j=0;j<COLS;j++) {
-        if(newState[i][j] === player1.current + 'W') {
-          newState[i][j] = player1.current;
-        } else if(newState[i][j] === player2.current + 'W') {
-          newState[i][j] = player2.current;
-        }
-      }
+    // if game is won
+    if (state.win) {
+      setState((prevState) => {
+        // Create a deep copy of the current board
+        const newBoard = prevState.board.map((row) => [...row]);
+
+        newBoard[emptyRowIndex][colIndex] = "";
+        const status = checkWinner(
+          newBoard,
+          emptyRowIndex,
+          colIndex,
+          lastTurn + "W"
+        );
+        console.log(status);
+
+        // unpaint the winner cells
+        status.cells.forEach((cell) => {
+          newBoard[cell.row][cell.col] = lastTurn;
+        });
+        newBoard[emptyRowIndex][colIndex] = "";
+
+        const newState = {
+          ...prevState,
+          win: false,
+          board: newBoard,
+          winner: "",
+          turn:
+            prevState.turn === player1.current
+              ? player2.current
+              : player1.current,
+        };
+        return newState;
+      });
+    } else {
+      setState((prevState) => {
+        // Create a deep copy of the current board
+        const newBoard = prevState.board.map((row) => [...row]);
+        newBoard[emptyRowIndex][colIndex] = "";
+
+        const newState = {
+          ...prevState,
+          board: newBoard,
+          turn:
+            prevState.turn === player1.current
+              ? player2.current
+              : player1.current,
+          draw: false,
+        };
+        return newState;
+      });
     }
-    newState[emptyRowIndex][colIndex] = "";
-    setState(newState);
-
-    // clear winner/draw
-    setWinner("");
-    setDraw(false);
 
     // forget last move
     moves.current.pop();
@@ -225,14 +269,7 @@ export default function Game() {
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
-      <Board
-        rows={ROWS}
-        cols={COLS}
-        state={state}
-        updateCell={updateCell}
-        players={players}
-        winner={winner}
-      />
+      <Board shape={shape} state={state} updateCell={updateCell} />
 
       <View
         style={{
@@ -243,7 +280,7 @@ export default function Game() {
           alignItems: "center",
         }}
       >
-        {draw ? (
+        {state.draw ? (
           <Text style={styles.text}>It's a draw!</Text>
         ) : (
           <>
@@ -252,20 +289,20 @@ export default function Game() {
                 width: 50,
                 height: 50,
                 borderRadius: 50 / 2,
-                backgroundColor: winner
-                  ? winner === player1.current
+                backgroundColor: state.win
+                  ? state.winner === player1.current
                     ? "yellow"
                     : "red"
-                  : player === player1.current
+                  : state.turn === player1.current
                   ? "yellow"
                   : "red",
               }}
             ></View>
             <Text style={styles.text}>
-              {winner
-                ? `${winner} wins 🎉`
+              {state.win
+                ? `${state.winner} wins 🎉`
                 : `${
-                    player === player1.current
+                    state.turn === player1.current
                       ? player1.current
                       : player2.current
                   }'s turn`}
