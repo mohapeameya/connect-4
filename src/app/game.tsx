@@ -5,7 +5,7 @@ import { useAudioPlayer } from "expo-audio";
 import audioClick from "@/assets/sounds/click.mp3";
 import audioWinner from "@/assets/sounds/winner.wav";
 import Board from "@/components/game/board";
-import { playFeedback, winnerFeedback } from "@/utils/utilities";
+import { CELL_STATES, playFeedback, winnerFeedback } from "@/utils/utilities";
 import Footer from "@/components/game/footer";
 import React from "react";
 
@@ -23,16 +23,16 @@ export default function Game() {
       (_, rowIndex) =>
         Array(shape.cols) // Create an array with 7 columns
           .fill(null)
-          .map((_, colIndex) => "") // Set each cell to "row,col"
+          .map((_, colIndex) => CELL_STATES.EMPTY) // Set each cell to "row,col"
     );
 
   const initialState = {
     board: initialBoard,
     players: [player1, player2],
-    turn: player1.current,
+    turn: CELL_STATES.P1,
     win: false,
     draw: false,
-    winner: "",
+    winner: -1,
   };
 
   const [state, setState] = useState(initialState);
@@ -42,14 +42,14 @@ export default function Game() {
 
   const getEmptyRowIndex = (colIndex: number) => {
     for (let i = shape.rows - 1; i >= 0; i--) {
-      if (state.board[i][colIndex] === "") return i;
+      if (state.board[i][colIndex] === CELL_STATES.EMPTY) return i;
     }
     return -1;
   };
 
-  const checkDraw = (board: string[][]) => {
+  const checkDraw = (board: number[][]) => {
     for (let i = 0; i < shape.cols; i++) {
-      if (board[0][i] === "") {
+      if (board[0][i] === CELL_STATES.EMPTY) {
         console.log(state.board[0][i]);
         return false;
       }
@@ -85,7 +85,8 @@ export default function Game() {
 
         // paint the winner cells
         status.cells.forEach((cell) => {
-          newBoard[cell.row][cell.col] = prevState.turn + "W";
+          newBoard[cell.row][cell.col] =
+            prevState.turn === CELL_STATES.P1 ? CELL_STATES.W1 : CELL_STATES.W2;
         });
 
         const newState = {
@@ -94,9 +95,7 @@ export default function Game() {
           board: newBoard,
           winner: prevState.turn,
           turn:
-            prevState.turn === player1.current
-              ? player2.current
-              : player1.current,
+            prevState.turn === CELL_STATES.P1 ? CELL_STATES.P2 : CELL_STATES.P1,
         };
         return newState;
       });
@@ -109,13 +108,16 @@ export default function Game() {
         // As per the original game rules
         newBoard[emptyRowIndex][colIndex] = prevState.turn;
 
+        // // paint arrow cells
+        // for(let i=emptyRowIndex-1; i>=0; i--) {
+        //   newBoard[i][colIndex] = 'D'
+        // }
+
         let newState = {
           ...prevState,
           board: newBoard,
           turn:
-            prevState.turn === player1.current
-              ? player2.current
-              : player1.current,
+            prevState.turn === CELL_STATES.P1 ? CELL_STATES.P2 : CELL_STATES.P1,
         };
         if (checkDraw(newBoard)) {
           newState = { ...newState, draw: true };
@@ -127,10 +129,10 @@ export default function Game() {
 
   // crux of the game
   const checkWinner = (
-    board: string[][],
+    board: number[][],
     rowIndex: number,
     colIndex: number,
-    turn: string
+    turn: number
   ) => {
     const directions = [
       [0, 1],
@@ -193,7 +195,7 @@ export default function Game() {
     // move state one move back
     const { emptyRowIndex, colIndex } = moves.current[lastMove.current];
     const lastTurn =
-      state.turn === player1.current ? player2.current : player1.current;
+      state.turn === CELL_STATES.P1 ? CELL_STATES.W2 : CELL_STATES.W1;
 
     // if game is won
     if (state.win) {
@@ -201,30 +203,24 @@ export default function Game() {
         // Create a deep copy of the current board
         const newBoard = prevState.board.map((row) => [...row]);
 
-        newBoard[emptyRowIndex][colIndex] = "";
-        const status = checkWinner(
-          newBoard,
-          emptyRowIndex,
-          colIndex,
-          lastTurn + "W"
-        );
+        newBoard[emptyRowIndex][colIndex] = CELL_STATES.EMPTY;
+        const status = checkWinner(newBoard, emptyRowIndex, colIndex, lastTurn);
         console.log(status);
 
         // unpaint the winner cells
         status.cells.forEach((cell) => {
-          newBoard[cell.row][cell.col] = lastTurn;
+          newBoard[cell.row][cell.col] =
+            lastTurn === CELL_STATES.W1 ? CELL_STATES.P1 : CELL_STATES.P2;
         });
-        newBoard[emptyRowIndex][colIndex] = "";
+        newBoard[emptyRowIndex][colIndex] = CELL_STATES.EMPTY;
 
         const newState = {
           ...prevState,
           win: false,
           board: newBoard,
-          winner: "",
+          winner: -1,
           turn:
-            prevState.turn === player1.current
-              ? player2.current
-              : player1.current,
+            prevState.turn === CELL_STATES.P1 ? CELL_STATES.P2 : CELL_STATES.P1,
         };
         return newState;
       });
@@ -232,15 +228,13 @@ export default function Game() {
       setState((prevState) => {
         // Create a deep copy of the current board
         const newBoard = prevState.board.map((row) => [...row]);
-        newBoard[emptyRowIndex][colIndex] = "";
+        newBoard[emptyRowIndex][colIndex] = CELL_STATES.EMPTY;
 
         const newState = {
           ...prevState,
           board: newBoard,
           turn:
-            prevState.turn === player1.current
-              ? player2.current
-              : player1.current,
+            prevState.turn === CELL_STATES.P1 ? CELL_STATES.P2 : CELL_STATES.P1,
           draw: false,
         };
         return newState;
@@ -290,19 +284,23 @@ export default function Game() {
                 height: 50,
                 borderRadius: 50 / 2,
                 backgroundColor: state.win
-                  ? state.winner === player1.current
+                  ? state.winner === CELL_STATES.P1
                     ? "yellow"
                     : "red"
-                  : state.turn === player1.current
+                  : state.turn === CELL_STATES.P1
                   ? "yellow"
                   : "red",
               }}
             ></View>
             <Text style={styles.text}>
               {state.win
-                ? `${state.winner} wins 🎉`
+                ? `${
+                    state.winner === CELL_STATES.P1
+                      ? player1.current
+                      : player2.current
+                  } wins 🎉`
                 : `${
-                    state.turn === player1.current
+                    state.turn === CELL_STATES.P1
                       ? player1.current
                       : player2.current
                   }'s turn`}

@@ -1,13 +1,15 @@
 import { MutableRefObject, useEffect } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import Entypo from '@expo/vector-icons/Entypo';
+import { CELL_STATES } from "@/utils/utilities";
 
 interface GameState {
-  board: string[][];
-  turn: string;
+  board: number[][];
+  turn: number;
   players: MutableRefObject<string>[];
   win: boolean;
   draw: boolean;
-  winner: string;
+  winner: number;
 }
 
 interface Shape {
@@ -48,23 +50,27 @@ export default function Board({
             borderRadius: cellWidth / 2,
             borderColor:
               state.win &&
-              (state.board[i][j] === state.players[0].current + "W" ||
-                state.board[i][j] === state.players[1].current + "W")
+              (state.board[i][j] === CELL_STATES.W1 ||
+                state.board[i][j] === CELL_STATES.W2)
                 ? "black"
                 : "transparent",
             borderWidth: 5,
             backgroundColor:
-              state.board[i][j] === state.players[0].current ||
-              state.board[i][j] === state.players[0].current + "W"
+              state.board[i][j] === CELL_STATES.P1 ||
+              state.board[i][j] === CELL_STATES.W1
                 ? "yellow"
-                : state.board[i][j] === state.players[1].current ||
-                  state.board[i][j] === state.players[1].current + "W"
+                : state.board[i][j] === CELL_STATES.P2 ||
+                  state.board[i][j] === CELL_STATES.W2
                 ? "red"
                 : "black",
             justifyContent: "center",
             alignItems: "center",
           }}
-        ></Pressable>
+        >
+         {/* {state.board[i][j] === 'D' && 
+         <Entypo name="chevron-down" size={40} color="white" />
+         }  */}
+        </Pressable>
       );
     }
     board.push(
@@ -76,7 +82,8 @@ export default function Board({
 
   useEffect(() => {
     console.log("Board rendered");
-  }, []);
+    console.log(state)
+  }, [state]);
   return (
     <View style={styles.board}>
       <View style={{ gap: gap }}>{board}</View>
