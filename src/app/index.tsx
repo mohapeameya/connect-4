@@ -1,6 +1,13 @@
 import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Image,
+  Platform,
+} from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
@@ -26,7 +33,9 @@ export default function Index() {
       <Link href={"/game"} asChild>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Start Game</Text>
-          <FontAwesome5 name="play" size={26} color="green" />
+          {Platform.OS !== "web" && (
+            <FontAwesome5 name="play" size={26} color="green" />
+          )}
         </TouchableOpacity>
       </Link>
       {/* <Link href={"/settings"} asChild>

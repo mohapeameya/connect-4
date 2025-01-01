@@ -1,7 +1,13 @@
 import { EvilIcons, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function Footer({
   restart,
@@ -15,7 +21,9 @@ export default function Footer({
   return (
     <View style={styles.footer}>
       <TouchableOpacity onPress={() => router.back()} style={styles.button}>
-        <Ionicons name="caret-back" size={24} color="yellow" />
+        {Platform.OS !== "web" && (
+          <Ionicons name="caret-back" size={24} color="yellow" />
+        )}
         <Text style={styles.buttonText}>Back</Text>
       </TouchableOpacity>
       {/* <View style={[styles.button, { flexDirection: "row", gap: 10 }]}> */}
@@ -26,7 +34,9 @@ export default function Footer({
         }}
       >
         <Text style={styles.buttonText}>Undo</Text>
-        <EvilIcons name="undo" size={30} color="white" />
+        {Platform.OS !== "web" && (
+          <EvilIcons name="undo" size={30} color="white" />
+        )}
       </TouchableOpacity>
       {/* <TouchableOpacity
           // style={styles.button}
@@ -45,7 +55,9 @@ export default function Footer({
         }}
       >
         <Text style={styles.buttonText}>Reset</Text>
-        <MaterialIcons name="delete-outline" size={24} color="red" />
+        {Platform.OS !== "web" && (
+          <MaterialIcons name="delete-outline" size={24} color="red" />
+        )}
       </TouchableOpacity>
     </View>
   );
