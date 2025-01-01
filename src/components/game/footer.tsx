@@ -12,9 +12,6 @@ export default function Footer({
   undo: () => void;
   // redo: () => void;
 }) {
-  useEffect(() => {
-    console.log("Footer rendered");
-  }, []);
   return (
     <View style={styles.footer}>
       <TouchableOpacity onPress={() => router.back()} style={styles.button}>
@@ -43,7 +40,7 @@ export default function Footer({
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          console.log("Restart Game");
+          // console.log("Restart Game");
           restart();
         }}
       >
@@ -58,9 +55,10 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 20,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+    gap: 20,
   },
   button: {
     borderColor: "white",

@@ -15,9 +15,9 @@ export default function Board({
     cols = shape.cols;
   const { width, height } = useWindowDimensions();
   const gap = 10;
-  const boardWidth = width - gap * 2;
-  const boardHeight = height - gap * 2;
-  let cellWidth = (boardWidth - (cols - 1) * gap) / cols;
+  const boardWidth = Math.min(width - 2 * gap, 500);
+  const boardHeight = Math.min(height, 600);
+  let cellWidth = (boardWidth - 2 * gap - (cols - 1) * gap) / cols;
   const cellHeight = (boardHeight - (rows - 1) * gap) / rows;
   cellWidth = Math.min(cellWidth, cellHeight);
   const board = [];
@@ -52,7 +52,7 @@ export default function Board({
             alignItems: "center",
           }}
         >
-         {/* {state.board[i][j] === 'D' && 
+          {/* {state.board[i][j] === 'D' && 
          <Entypo name="chevron-down" size={40} color="white" />
          }  */}
         </Pressable>
@@ -65,12 +65,8 @@ export default function Board({
     );
   }
 
-  useEffect(() => {
-    console.log("Board rendered");
-    console.log(state)
-  }, [state]);
   return (
-    <View style={styles.board}>
+    <View style={[styles.board, { width: boardWidth }]}>
       <View style={{ gap: gap }}>{board}</View>
     </View>
   );
@@ -81,5 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     padding: 10,
     borderRadius: 25,
+    alignSelf: "center",
   },
 });

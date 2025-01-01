@@ -51,7 +51,7 @@ export default function Game() {
   const checkDraw = (board: number[][]) => {
     for (let i = 0; i < shape.cols; i++) {
       if (board[0][i] === CELL_STATES.EMPTY) {
-        console.log(state.board[0][i]);
+        // console.log(state.board[0][i]);
         return false;
       }
     }
@@ -206,7 +206,7 @@ export default function Game() {
 
         newBoard[emptyRowIndex][colIndex] = CELL_STATES.EMPTY;
         const status = checkWinner(newBoard, emptyRowIndex, colIndex, lastTurn);
-        console.log(status);
+        // console.log(status);
 
         // unpaint the winner cells
         status.cells.forEach((cell) => {
