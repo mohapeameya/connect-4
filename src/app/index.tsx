@@ -2,6 +2,8 @@ import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import * as SplashScreen from "expo-splash-screen";
+import { useCallback } from "react";
 
 export default function Index() {
   const logoActualWidth = 402,
@@ -9,8 +11,12 @@ export default function Index() {
   const logoWidth = 200;
   const logoHeight = (logoWidth * logoActualHeight) / logoActualWidth;
 
+  const onLayoutView = useCallback(() => {
+    setTimeout(() => SplashScreen.hide(), 800);
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <View onLayout={onLayoutView} style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.title}>CONNECT 4</Text>
       <Image
