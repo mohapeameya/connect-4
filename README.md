@@ -65,8 +65,8 @@ The game is live on GitHub Pages: [Play Connect 4](https://mohapeameya.github.io
   <img src="./assets/images/screenshots/turn2.png" alt="Player 2's turn" width="30%">
 </p>
 <p align="center">
-  <img src="./assets/images/screenshots/draw.png" alt="Draw" width="45%">
   <img src="./assets/images/screenshots/winner.png" alt="Winner" width="45%">
+  <img src="./assets/images/screenshots/draw.png" alt="Draw" width="45%">
 </p>
 
 ---
