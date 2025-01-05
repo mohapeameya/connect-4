@@ -2,7 +2,7 @@
 
 A classic **Connect 4** game built using **React Native** and deployed on **GitHub Pages**. Enjoy a two-player mode where you can challenge friends and family to this timeless strategy game!
 
-![Connect 4 Game Demo](demo-image-url-here)  
+![Connect 4 Game Demo](https://mohapeameya.github.io/connect-4/)  
 *(Replace the above with a link or GIF showing your app in action)*
 
 ---
