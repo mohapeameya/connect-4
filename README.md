@@ -65,7 +65,7 @@ The game is live on GitHub Pages: [Play Connect 4](https://mohapeameya.github.io
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!  
-Feel free to check the [issues page](https://mohapeameya.github.io/connect-4/issues).  
+Feel free to check the [issues page](https://github.com/mohapeameya/connect-4/issues).  
 
 ---
 
