@@ -60,9 +60,9 @@ The game is live on GitHub Pages: [Play Connect 4](https://mohapeameya.github.io
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="./assets/images/home.png" alt="Home Screen" width="30%">
-  <img src="./assets/images/turn1.png" alt="Player 1's turn" width="30%">
-  <img src="./assets/images/turn2.png" alt="Player 2's turn" width="30%">
+  <img src="./assets/images/screenshots/home.png" alt="Home Screen" width="30%">
+  <img src="./assets/images/screenshots/turn1.png" alt="Player 1's turn" width="30%">
+  <img src="./assets/images/screenshots/turn2.png" alt="Player 2's turn" width="30%">
 </p>
 
 <p align="center">
