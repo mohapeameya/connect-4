@@ -59,7 +59,16 @@ The game is live on GitHub Pages: [Play Connect 4](https://mohapeameya.github.io
 
 ## 🖼️ Screenshots
 
-*(Add screenshots or GIFs showing your app features)*  
+<p align="center">
+  <img src="./assets/images/home.png" alt="Home Screen" width="30%">
+  <img src="./assets/images/turn1.png" alt="Player 1's turn" width="30%">
+  <img src="./assets/images/turn2.png" alt="Player 2's turn" width="30%">
+</p>
+
+<p align="center">
+  <img src="./assets/images/winner.png" alt="Winner" width="45%">
+  <img src="./assets/images/draw.png" alt="Draw" width="45%">
+</p>
 
 ---
 
