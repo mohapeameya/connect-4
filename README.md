@@ -1,50 +1,84 @@
-# Welcome to your Expo app 👋
+# Connect 4 Game 🎮
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A classic **Connect 4** game built using **React Native** and deployed on **GitHub Pages**. Enjoy a two-player mode where you can challenge friends and family to this timeless strategy game!
 
-## Get started
+![Connect 4 Game Demo](demo-image-url-here)  
+*(Replace the above with a link or GIF showing your app in action)*
 
-1. Install dependencies
+---
 
+## 🌟 Features
+
+- 🎮 **Two-Player Mode**: Play against a friend on the same device.  
+- 🕹️ **Interactive Gameplay**: Tap to drop pieces, with turn-based indicators.  
+- 🎨 **Responsive UI**: Adapts seamlessly across screen sizes and devices.  
+- 🏆 **Winner Detection**: Automatically detects a win or draw and highlights the winning sequence.  
+
+---
+
+## 🛠️ Tech Stack
+
+- **React Native**: Core framework for building the app.  
+- **GitHub Pages**: Hosting for the web version of the game.  
+- **Expo**: Simplified development and deployment.  
+
+---
+
+## 🚀 Deployment
+
+The game is live on GitHub Pages: [Play Connect 4](https://your-username.github.io/connect-4)  
+*(Replace the link above with your actual GitHub Pages URL)*  
+
+---
+
+## 🪩 How to Run Locally
+
+### Prerequisites
+- [Node.js](https://nodejs.org/)  
+- [Expo CLI](https://expo.dev/)  
+
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/connect-4.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd connect-4
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+4. Start the development server:
    ```bash
-    npx expo start
+   expo start
    ```
+5. Open the app on your device using the Expo Go app or a web browser.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🖼️ Screenshots
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+*(Add screenshots or GIFs showing your app features)*  
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🤝 Contributing
 
-```bash
-npm run reset-project
-```
+Contributions, issues, and feature requests are welcome!  
+Feel free to check the [issues page](https://github.com/your-username/connect-4/issues).  
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📜 License
 
-To learn more about developing your project with Expo, look at the following resources:
+This project is licensed under the **MIT License**.  
+See the [LICENSE](LICENSE) file for details.  
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## 🙌 Acknowledgements
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Inspired by the classic **Connect 4** board game.  
+- Thanks to the **React Native** and **Expo** communities for their awesome tools and resources.  
