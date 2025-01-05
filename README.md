@@ -26,7 +26,7 @@ A classic **Connect 4** game built using **React Native** and deployed on **GitH
 
 ## 🚀 Deployment
 
-The game is live on GitHub Pages: [Play Connect 4](https://your-username.github.io/connect-4)  
+The game is live on GitHub Pages: [Play Connect 4](https://mohapeameya.github.io/connect-4/)  
 *(Replace the link above with your actual GitHub Pages URL)*  
 
 ---
@@ -67,7 +67,7 @@ The game is live on GitHub Pages: [Play Connect 4](https://your-username.github.
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!  
-Feel free to check the [issues page](https://github.com/your-username/connect-4/issues).  
+Feel free to check the [issues page](https://mohapeameya.github.io/connect-4/issues).  
 
 ---
 
