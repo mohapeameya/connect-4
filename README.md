@@ -12,6 +12,7 @@ A classic **Connect 4** game built using **React Native** and deployed on **GitH
 - 🕹️ **Interactive Gameplay**: Tap to drop pieces, with turn-based indicators.  
 - 🎨 **Responsive UI**: Adapts seamlessly across screen sizes and devices.  
 - 🏆 **Winner Detection**: Automatically detects a win or draw and highlights the winning sequence.  
+- ↩️ **Undo Moves**: Step back in time with the undo feature, allowing players to reverse their last move and rethink their strategy.
 
 ---
 
